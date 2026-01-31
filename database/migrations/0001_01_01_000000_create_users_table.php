@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('zip')->nullable();
             $table->text('bio')->nullable();
-             $table->string('avatar')->nullable()->after('email');
+         
             $table->rememberToken();
             $table->timestamps();
         });

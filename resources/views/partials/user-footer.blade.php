@@ -410,8 +410,8 @@
                     </li>
                     @auth
                         <li>
-                            <a class="nav-link nav-link-luxury {{ request()->routeIs('user.bookings') ? 'active' : '' }}"
-                                href="{{ route('user.bookings') }}"></a>
+                            <a href="{{ route('user.bookings') }}">
+                              <i class="fas fa-chevron-right"></i>My Bookings</a>
                         </li>
                         <li>
                             <a href="{{ route('favorites') }}">

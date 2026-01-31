@@ -8,21 +8,29 @@ class Booking extends Model
 {
     protected $fillable = [
         'user_id', 'hall_id', 'event_date', 'start_time',
-        'duration', 'guests', 'event_type', 'special_requests',
-        'total_amount', 'status', 'admin_notes'
+        'end_time', 'guests', 'event_type', 'special_requests',
+        'total_price', 'status', 'admin_notes', 'payment_status',
+        'payment_confirmed_at', 'payment_confirmed_by', 'payment_method',
+        'approved_at', 'approved_by', 'rejected_at', 'rejected_by', 'rejection_reason',
+        'hospitality_package', 'flower_color', 'is_mixed'
     ];
 
     protected $casts = [
         'event_date' => 'date',
-        'total_amount' => 'decimal:2'
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'payment_confirmed_at' => 'datetime',
+        'total_price' => 'decimal:2'
     ];
+   
+
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function venue()
+    public function hall()
     {
         return $this->belongsTo(Hall::class);
     }
@@ -47,6 +55,10 @@ class Booking extends Model
     {
         return $query->where('event_date', '>=', now());
     }
+       public function services()
+    {
+        return $this->hasMany(BookingService::class);
+    }
 
     // التحقق من التوفر
     public static function isAvailable($venueId, $date, $startTime, $duration)
@@ -63,4 +75,5 @@ class Booking extends Model
             })
             ->exists();
     }
+
 }

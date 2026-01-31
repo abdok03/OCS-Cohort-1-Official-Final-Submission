@@ -164,7 +164,10 @@
 
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title mb-2">{{ $hall->name }}</h5>
+                            <h5 class="card-title mb-1">{{ $hall->name }}</h5>
+                            <div class="small fw-bold text-primary mb-2">
+                                <i class="bi bi-person-badge me-1"></i> Owner: {{ $hall->user->name ?? 'System' }}
+                            </div>
                             <p class="card-text text-muted mb-3">
                                 <i class="bi bi-geo-alt me-1"></i> {{ $hall->address }} - {{ $hall->city }}
 
@@ -241,13 +244,25 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Category</label>
                                         <select name="categories[]" class="form-select" multiple required>
-                                            <option value="">Select Category</option>
+                                            <option value="">Choose a Category...</option>
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
-
                                     </div>
+
+                                    @if(Auth::user()->role === 'admin')
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label text-primary fw-bold">Hall Owner Assignment</label>
+                                        <select name="owner_id" class="form-select border-primary shadow-sm" required>
+                                            <option value="">Select Owner...</option>
+                                            @foreach($owners as $owner)
+                                                <option value="{{ $owner->id }}">{{ $owner->name }} ({{ $owner->email }})</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="form-text small text-primary">Required: Select which vendor owns this hall.</div>
+                                    </div>
+                                    @endif
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Price per Day</label>
                                         <div class="input-group">

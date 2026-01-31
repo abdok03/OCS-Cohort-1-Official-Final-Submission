@@ -24,6 +24,7 @@ public function index(Request $request)
     if ($request->filled('role')) {
         $query->where('role', $request->role);
     }
+    
 
     $users = $query->latest()->paginate(2)->withQueryString();
 

@@ -35,6 +35,7 @@ public function index()
                 'reviews' => rand(50, 200),
                 'capacity' => $hall->capacity_max . ' Guests',
                 'description' => $hall->description,
+                'video' => $hall->video_path ? asset('storage/' . $hall->video_path) : null,
             ];
         });
 

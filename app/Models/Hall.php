@@ -11,7 +11,7 @@ class Hall extends Model
     use HasFactory;
         protected $fillable = [
         'name','slug','description','capacity_min','capacity_max','price_per_day',
-        'price_per_hour','address','city','status','user_id',
+        'price_per_hour','address','city','status','user_id', 'video_path'
     ];
 
         public function user()
@@ -33,4 +33,8 @@ public function bookings()
 {
     return $this->hasMany(Booking::class);
 }
+    public function services()
+    {
+        return $this->hasMany(HallService::class);
+    }
 }

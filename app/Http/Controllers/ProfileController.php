@@ -17,9 +17,26 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-     public function index()
+    public function index()
     {
-        return view('pages.profile'); // نفس مسار ملف blade عندك
+        $role = Auth::user()->role;
+        
+        return match($role) {
+            'admin' => view('pages.profile'),
+            'owner' => view('venue.profile'),
+            default => view('pages.user-profile'),
+        };
+    }
+
+    public function settings()
+    {
+        $role = Auth::user()->role;
+
+        return match($role) {
+            'admin' => view('pages.settings'),
+            'owner' => view('venue.profile'), // Venue settings are currently in the profile page
+            default => view('pages.user-profile'),
+        };
     }
     public function edit(Request $request): View
     {
@@ -44,8 +61,6 @@ class ProfileController extends Controller
         'state' => 'nullable|string|max:100',
         'zip' => 'nullable|string|max:20',
         'bio' => 'nullable|string',
-        'dob' => 'nullable|date',
-        'wedding_date' => 'nullable|date',
     ]);
 
     $user->update($data);
@@ -76,32 +91,44 @@ return redirect()->route('profile')->with('status', 'Profile updated!');
 
 public function updateAvatar(Request $request)
 {
+    try {
+        \Log::info('updateAvatar attempt', ['files' => $request->allFiles()]);
+        
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+        ]);
 
+        /** @var User $user */
+        $user = Auth::user();
 
-    $request->validate([
-        'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-    ]);
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
 
-    /** @var User $user */
-    $user = Auth::user();
+            // Store in the 'avatars' subdirectory of the 'public' disk
+            $path = $file->storeAs('avatars', $filename, 'public');
+            \Log::info('File stored successfully', ['path' => $path]);
 
-    if ($request->hasFile('avatar')) {
-        $file = $request->file('avatar');
-        $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            // Deletion check
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            
+            $user->avatar = $path; // This will be 'avatars/filename.jpg'
+            $user->save();
+            \Log::info('User record updated', ['user_id' => $user->id, 'avatar' => $path]);
 
-        $file->storeAs('public/avatars', $filename);
-
-        if ($user->avatar && Storage::exists('public/avatars/' . $user->avatar)) {
-            Storage::delete('public/avatars/' . $user->avatar);
+            return response()->json([
+                'success' => true,
+                'avatar_url' => asset('storage/' . $user->avatar)
+            ]);
         }
-        $user->avatar = $filename;
-        $user->save();
-    }
 
-    return response()->json([
-        'success' => true,
-        'avatar_url' => asset('storage/avatars/' . $user->avatar)
-    ]);
+        return response()->json(['success' => false, 'message' => 'No file uploaded'], 400);
+    } catch (\Exception $e) {
+        \Log::error('Avatar upload error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
 }
 
 

@@ -24,8 +24,12 @@ return new class extends Migration
         $table->decimal('total_price', 10, 2);
         $table->enum('status', ['pending', 'approved', 'rejected', 'cancelled'])->default('pending');
             $table->text('admin_notes')->nullable();
-    $table->timestamp('approved_at')->nullable();
+        $table->timestamp('approved_at')->nullable();
     $table->foreignId('approved_by')->nullable()->constrained('users');
+
+    $table->timestamp('rejected_at')->nullable();
+    $table->foreignId('rejected_by')->nullable()->constrained('users');
+    $table->text('rejection_reason')->nullable();
             $table->timestamps();
         });
     }

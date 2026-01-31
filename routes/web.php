@@ -8,28 +8,56 @@ use App\Http\Controllers\HallImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController; // أضف هذا
+use App\Http\Middleware\VenueOwnerMiddleware;
+use App\Http\Controllers\VenueOwnerController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
+
+// Venue Owner Routes
+Route::middleware(['auth', VenueOwnerMiddleware::class])->prefix('venue')->name('venue.')->group(function () {
+    Route::get('/dashboard', [VenueOwnerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/halls', [VenueOwnerController::class, 'halls'])->name('halls.index');
+    Route::get('/halls/create', [VenueOwnerController::class, 'createHall'])->name('halls.create');
+    Route::post('/halls', [VenueOwnerController::class, 'storeHall'])->name('halls.store');
+    Route::get('/halls/{hall}/edit', [VenueOwnerController::class, 'editHall'])->name('halls.edit');
+    Route::patch('/halls/{hall}', [VenueOwnerController::class, 'updateHall'])->name('halls.update');
+    Route::get('/halls/{hall}/preview', [VenueOwnerController::class, 'previewHall'])->name('halls.preview');
+    Route::delete('/halls/{hall}', [VenueOwnerController::class, 'deleteHall'])->name('halls.delete');
+    
+    Route::get('/halls/{hall}/images', [VenueOwnerController::class, 'manageImages'])->name('halls.images');
+    Route::post('/halls/{hall}/images', [VenueOwnerController::class, 'storeImage'])->name('halls.images.store');
+    Route::patch('/halls/{hall}/images/{image}/primary', [VenueOwnerController::class, 'setPrimaryImage'])->name('halls.images.primary');
+    Route::delete('/halls/{hall}/images/{image}', [VenueOwnerController::class, 'deleteImage'])->name('halls.images.delete');
+
+    Route::get('/halls/{hall}/services', [VenueOwnerController::class, 'manageServices'])->name('halls.services');
+    Route::post('/halls/{hall}/services', [VenueOwnerController::class, 'storeService'])->name('halls.services.store');
+    Route::delete('/halls/{hall}/services/{service}', [VenueOwnerController::class, 'deleteService'])->name('halls.services.delete');
+
+    Route::get('/service-categories', [VenueOwnerController::class, 'serviceCategories'])->name('service-categories.index');
+    Route::post('/service-categories', [VenueOwnerController::class, 'storeServiceCategory'])->name('service-categories.store');
+    Route::delete('/service-categories/{category}', [VenueOwnerController::class, 'deleteServiceCategory'])->name('service-categories.delete');
+    
+    Route::get('/bookings', [VenueOwnerController::class, 'bookings'])->name('bookings.index');
+    Route::get('/bookings/{booking}', [VenueOwnerController::class, 'showBooking'])->name('bookings.show');
+    Route::patch('/bookings/{booking}/status', [VenueOwnerController::class, 'updateBookingStatus'])->name('bookings.update-status');
+    
+    Route::get('/analytics', [VenueOwnerController::class, 'analytics'])->name('analytics');
+    Route::get('/profile', [VenueOwnerController::class, 'profile'])->name('profile');
+    Route::patch('/profile', [VenueOwnerController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/avatar', [VenueOwnerController::class, 'updateAvatar'])->name('profile.avatar.update');
+});
+
 
 // 1. الصفحة الرئيسية - FIXED
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// 2. صفحات Auth
-Route::get('/login', function () {
-    return view('pages.login');
-})->name('login');
-
-Route::get('/register', function () {
-    return view('pages.register');
-})->name('register');
-
-Route::get('/forgot-password', function () {
-    return view('pages.forgot-password');
-})->name('password.request');
+// 2. صفحات Auth - Handled by auth.php
 
 // 3. Route الـ explore - ADD THIS
-Route::get('/explore', [HallController::class, 'index'])->name('explore');
-
+// في routes/web.php
+Route::get('/explore', [HallController::class, 'explore'])->name('explore');
+Route::get('/explore/filter', [HallController::class, 'filter'])->name('explore.filter');
+Route::get('/halls/{hall}/quick-view', [HallController::class, 'quickView'])->name('halls.quickView');
 // 4. Route تفاصيل القاعة - FIXED
 Route::get('/venue/{hall}', [HallController::class, 'show'])->name('venue.details');
 // أو إذا بدك تحافظ على الاسم القديم:
@@ -38,14 +66,10 @@ Route::get('/venue/{hall}', [HallController::class, 'show'])->name('venue.detail
 // 5. صفحات تحتاج تسجيل دخول
 Route::middleware(['auth'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('pages.dashboard');
-    })->name('dashboard');
+    // Dashboard
+    Route::get('/dashboard', [BookingController::class, 'dashboard'])->name('dashboard');
 
-    // My Bookings
-    Route::get('/my-bookings', function () {
-        return view('pages.my-bookings');
-    })->name('bookings');
+
 
     // Favorites
     Route::get('/favorites', function () {
@@ -82,9 +106,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('reports');
 
     // Settings
-    Route::get('/settings', function () {
-        return view('pages.settings');
-    })->name('settings');
+    Route::get('/settings', [ProfileController::class, 'settings'])->name('settings');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -109,6 +131,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin-dashboard', function () {
         return view('pages.dashboard');
     })->name('admin.dashboard');
+    Route::get('/admin/search', [HallController::class, 'adminSearch'])->name('admin.search');
 });
 // Bookings routes
 Route::middleware(['auth'])->group(function () {
@@ -118,6 +141,7 @@ Route::middleware(['auth'])->group(function () {
     // إدارة الحجوزات (للمشرفين)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.update-status');
         Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
     });
@@ -136,12 +160,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bookings/{booking}/confirmation', [BookingController::class, 'confirmation'])->name('bookings.confirmation');
 
     // حجوزات المستخدم
-    Route::get('/my-bookings', [BookingController::class, 'index'])->name('user.bookings');
+    Route::get('/my-bookings', [BookingController::class, 'userBookings'])->name('user.bookings');
 
     // عرض حجز معين
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
 
     // إلغاء الحجز
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
+    // الدفع
+    Route::get('/bookings/{booking}/checkout', [BookingController::class, 'checkout'])->name('bookings.checkout');
+    Route::post('/bookings/{booking}/process-payment', [BookingController::class, 'processPayment'])->name('bookings.process-payment');
 });
 require __DIR__.'/auth.php';

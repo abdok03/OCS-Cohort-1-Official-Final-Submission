@@ -1,22 +1,21 @@
 <style>
     /* متغيرات التصميم */
     :root {
-        --nav-gold: #D4AF37;
-        --nav-gold-light: #F4E4B5;
-        --nav-dark: #1A1A1A;
+        --nav-gold: var(--royal-gold);
+        --nav-gold-light: var(--royal-gold-light);
+        --nav-dark: var(--midnight);
         --nav-light: #FFFFFF;
         --nav-shadow: rgba(0, 0, 0, 0.1);
-        --nav-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --nav-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* تصميم النافبار الرئيسي */
+    /* Primary Navbar Styling */
     .luxury-navbar {
-        background: rgba(255, 255, 255, 0.98) !important;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-        padding: 0.8rem 0;
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 1.25rem 0;
         transition: var(--nav-transition);
     }
 
@@ -357,7 +356,10 @@
                 @auth
                     <li class="nav-item">
                         <a class="nav-link nav-link-luxury {{ request()->routeIs('user.bookings') ? 'active' : '' }}"
-                            href="{{ route('user.bookings') }}"></a>
+                            href="{{ route('user.bookings') }}">
+                            <i class="fas fa-calendar-alt d-lg-none me-2"></i>
+                            My Bookings
+                        </a>
                     </li>
                 @endauth
             </ul>
@@ -375,7 +377,7 @@
                     <div class="dropdown">
                         <button class="user-btn-luxury dropdown-toggle d-flex align-items-center gap-2" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=D4AF37&color=fff' }}"
                                 alt="{{ auth()->user()->first_name }}" class="user-avatar-luxury">
                             <span class="d-none d-lg-inline">
                                 {{ auth()->user()->first_name }}
@@ -386,7 +388,7 @@
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-luxury">
                             <li class="px-3 py-2 border-bottom">
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=D4AF37&color=fff' }}"
                                         alt="{{ auth()->user()->first_name }}" class="user-avatar-luxury"
                                         style="width: 40px; height: 40px;">
                                     <div>

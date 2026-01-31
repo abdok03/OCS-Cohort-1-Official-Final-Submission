@@ -46,6 +46,19 @@
                                     </select>
                                 </div>
 
+                                @if(Auth::user()->role === 'admin')
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label fw-bold text-primary">Assigned Owner</label>
+                                    <select name="owner_id" class="form-select border-primary">
+                                        @foreach($owners as $owner)
+                                            <option value="{{ $owner->id }}" {{ $hall->user_id == $owner->id ? 'selected' : '' }}>
+                                                {{ $owner->name }} ({{ $owner->role }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @endif
+
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">City</label>
                                     <input type="text" name="city" class="form-control"

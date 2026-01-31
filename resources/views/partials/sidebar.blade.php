@@ -31,7 +31,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('requests') }}">
+                <a class="nav-link" href="{{ route('admin.bookings.index') }}">
                     <i class="bi bi-inbox"></i>
                     <span>Requests</span>
                 </a>
@@ -70,7 +70,7 @@
 
     <div class="sidebar-footer p-3 border-top">
         <div class="d-flex align-items-center">
-            <img src="{{ auth()->user()->avatar ?? asset('images/default-avatar.png') }}" alt="User"
+            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=D4AF37&color=fff' }}" alt="User"
                 class="avatar rounded-circle me-2" style="width:40px;height:40px;object-fit:cover;">
             <div>
                 <div class="fw-medium">

@@ -14,34 +14,34 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
 
     <style>
         :root {
-            --primary: rgb(59, 42, 42);
-            --primary-dark: #4f46e5;
-            --primary-light: #e0e7ff;
+            --royal-gold: #D4AF37;
+            --royal-gold-dark: #B5952F;
+            --royal-gold-light: rgba(212, 175, 55, 0.1);
+            --midnight: #1A1A1A;
+            --slate-gray: #4A4A4A;
+            --premium-cream: #FAF9F6;
+            --ivory-white: #FDFCF0;
+            
+            --primary: var(--royal-gold);
+            --primary-dark: var(--royal-gold-dark);
+            --primary-light: var(--royal-gold-light);
             --secondary: #10b981;
-            --secondary-light: #d1fae5;
             --warning: #f59e0b;
-            --warning-light: #fef3c7;
             --danger: #ef4444;
-            --danger-light: #fee2e2;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-300: #cbd5e1;
-            --gray-400: #94a3b8;
-            --gray-500: #64748b;
-            --gray-600: #475569;
-            --border-radius: 0.75rem;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --dark: var(--midnight);
+            --light: var(--premium-cream);
+            
+            --border-radius: 1.25rem;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -51,88 +51,164 @@
             overflow-x: hidden;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        h1, h2, h3, h4, h5, h6, .luxury-text {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
         }
 
-        .dark .glass {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card {
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
 
         .btn-primary {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            padding: 0.5rem 1.5rem;
-            font-weight: 500;
+            background-color: var(--midnight);
+            border-color: var(--midnight);
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+            transition: var(--transition);
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-dark);
-            border-color: var(--primary-dark);
-            transform: translateY(-1px);
+            background-color: var(--royal-gold);
+            border-color: var(--royal-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-outline-primary {
+            color: var(--midnight);
+            border-color: var(--midnight);
+            border-radius: 50px;
+            padding: 0.6rem 1.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--midnight);
+            border-color: var(--midnight);
+            color: white;
+            transform: translateY(-2px);
         }
 
         .stat-card {
-            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
-            color: white;
+            background: white;
+            color: var(--midnight);
             border-radius: var(--border-radius);
-            padding: 1.5rem;
+            padding: 1.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
+            transition: var(--transition);
         }
 
-        .stat-card::before {
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::after {
             content: '';
             position: absolute;
-            top: 0;
+            bottom: 0;
             right: 0;
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transform: translate(30%, -30%);
+            width: 4px;
+            height: 100%;
+            background: var(--royal-gold);
         }
 
-        /* الألوان الناعمة للخلفيات (Soft Backgrounds) */
-        .bg-soft-primary {
-            background-color: rgba(13, 110, 253, 0.1);
+        .stat-label {
+            color: var(--slate-gray);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
         }
 
-        .bg-warning-light {
-            background-color: rgba(255, 193, 7, 0.15);
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--midnight);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: var(--royal-gold-light);
+            color: var(--royal-gold);
         }
 
-        .bg-info-light {
-            background-color: rgba(13, 202, 240, 0.15);
+        /* Sidebar Styles Overrides */
+        #sidebar {
+            background: var(--midnight) !important;
+            border-right: none;
         }
 
-        /* دعم الوضع الليلي إذا كان مفعلاً */
-        .dark-mode .card {
-            background-color: #1e293b;
-            color: #f8fafc;
+        .sidebar-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            padding: 2rem 1.5rem !important;
         }
 
-        .dark-mode .card-header {
-            border-bottom: 1px solid #334155;
-            color: #f8fafc;
-            background: transparent !important;
+        .nav-link {
+            border-radius: 12px !important;
+            margin: 0.2rem 1rem !important;
+            padding: 0.8rem 1.2rem !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            font-weight: 500 !important;
+            transition: var(--transition) !important;
         }
 
-        .dark-mode .dark-mode-bg-soft {
-            background-color: #334155 !important;
-            border-color: #475569 !important;
-            color: #fff;
+        .nav-link:hover, .nav-link.active {
+            background: var(--royal-gold) !important;
+            color: white !important;
+            transform: translateX(5px);
         }
 
-        .dark-mode .form-control,
-        .dark-mode .form-select {
-            background-color: #0f172a;
-            border-color: #334155;
-            color: #fff;
+        .nav-link i {
+            font-size: 1.2rem !important;
+            margin-right: 12px !important;
+        }
+
+        .main-content {
+            background-color: var(--premium-cream);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+            padding: 1rem 1.5rem !important;
         }
 
         .avatar-lg {

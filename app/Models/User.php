@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Hall;
+
 
 class User extends Authenticatable
 {
@@ -24,15 +26,22 @@ class User extends Authenticatable
         'password',
         'password_confirmation',
         'avatar',
+        'phone',
+        'role',
         'active',
     ];
     protected $casts = [
     'active' => 'boolean',
 ];
-public function getNameAttribute()
-{
-    return "{$this->first_name} {$this->last_name}";
-}
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getIsVenueOwnerAttribute()
+    {
+        return $this->role === 'owner';
+    }
 
     /**
      * The attributes that should be hidden for serialization.

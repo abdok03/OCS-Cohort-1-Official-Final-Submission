@@ -35,7 +35,7 @@ switch ($user->role) {
     case 'admin':
         return redirect()->route('dashboard');
     case 'owner':
-        return redirect()->route('owner.panel');
+        return redirect()->route('venue.dashboard');
     default:
         return redirect()->route('home');
 }
